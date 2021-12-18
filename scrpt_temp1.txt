@@ -1,0 +1,16 @@
+set xzeroaxis
+set yzeroaxis
+set xlabel"t(s)"
+set ylabel"Temp(K)"
+set xtics 0,10,50
+set ytics
+set term png
+set output 'temp_10-4.png'
+
+set autoscale
+set yrange[20:100]
+unset key
+plot 'PRf_en.dat' u 1:5 w l lc 1
+
+set term qt
+pause-1

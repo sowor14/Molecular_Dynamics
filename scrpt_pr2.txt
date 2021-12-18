@@ -1,0 +1,60 @@
+file1 = 'PRf_plots1.dat'
+file2 = 'PRf_plots2.dat'
+
+set term png
+set output 'pressure_t.png'
+
+set xzeroaxis
+set yzeroaxis
+set xtics nomirror
+set ytics nomirror
+
+set multiplot
+
+# Frame plot
+set autoscale
+set xrange[0:108]
+
+set ytics auto
+
+set key t l 
+set size 1,1
+set origin 0,0
+set xlabel 't (ps)' enhanced
+set ylabel 'Pressure (Pa)'
+stats file2 u 6 nooutput name 'data'
+set tmargin at screen 0.9
+set label gprintf('×10^{%T}',data_max) at graph 0.0, screen 0.90 offset 0,0.75
+set format y '%.0f'
+plot file1 i 0 u (1e12*$1):(1e-11*$6) w l ls 1 t'{/Symbol r}=0.34',\
+     file1 i 1 u (1e12*$1):(1e-11*$6) w l ls 2 t'{/Symbol r}=0.68',\
+     file2 i 0 u (1e12*$1):(1e-11*$6) w l ls 3 t'{/Symbol r}=1.01',\
+     file2 i 1 u (1e12*$1):(1e-11*$6) w l ls 4 t'{/Symbol r}=1.35'
+
+unset label
+# Small plot
+
+set size 0.7,0.8
+set origin 0.3,0.2
+set autoscale
+set xrange[20:108]
+unset key
+unset xlabel
+unset ylabel
+
+set ytics auto
+
+# set tmargin at screen 0.9
+# set lmargin at screen 0.6
+set label gprintf('×10^{%T}',1e11) at graph 0.0, screen 0.90 offset 0,0.75
+set format y '%.0f'
+plot file1 i 0 u (1e12*$1):(1e-10*$6) w l ls 1 t'{/Symbol r}=0.34',\
+     file1 i 1 u (1e12*$1):(1e-10*$6) w l ls 2 t'{/Symbol r}=0.68',\
+     file2 i 0 u (1e12*$1):(1e-10*$6) w l ls 3 t'{/Symbol r}=1.01',\
+     file2 i 1 u (1e12*$1):(1e-10*$6) w l ls 4 t'{/Symbol r}=1.35'
+
+unset multiplot
+set term qt
+reset
+pause-1
+

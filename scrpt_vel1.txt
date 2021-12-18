@@ -1,0 +1,40 @@
+load 'set1.pal'
+set xzeroaxis
+set yzeroaxis
+set xlabel"Velocity"
+set xtics
+set ytics
+set style fill solid border -1
+file='PRf_vel_10-3.dat'
+set term png
+set output 'vel_distr_10-3.png'
+T=87.22
+f(x)=exp(-x**2/(2*T))/sqrt(2*pi*T)
+set multiplot title '{/Symbol d}t=10^{-3}, T=87.22 K' enhanced
+# Velocitats inicials
+set origin 0,0
+set size 0.5,0.95
+set autoscale
+unset key
+set ylabel"Inital distr. frequency"
+set xrange[-30:30]
+binwidth = 5
+set boxwidth binwidth
+stats file i 0 u 1 nooutput
+bin(x, width) = width*floor(x/width) + binwidth/2.0
+plot file i 0 u (bin($1, binwidth)):(1.0/(binwidth*STATS_records)) smooth freq w boxes ls 2
+# unset ytics
+unset ylabel
+set origin 0.5,0
+set size 0.5,0.95
+set autoscale
+set xrange[-31:31]
+binwidth = 5
+set ylabel"Final distr. frequency"
+set boxwidth binwidth
+stats file i 1 u 1 nooutput
+bin(x, width) = width*floor(x/width) + binwidth/2.0
+plot file i 1 u (bin($1, binwidth)):(1.0/(binwidth*STATS_records)) smooth freq w boxes ls 1, f(x) w l ls 3 lw 2
+unset multiplot
+set term qt
+pause-1

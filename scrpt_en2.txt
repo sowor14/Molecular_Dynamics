@@ -1,0 +1,109 @@
+file1 = 'PRf_Ar1.dat'
+file2 = 'PRf_Ar2.dat'
+
+set term png
+set output 'energies_rho.png'
+
+# xsep = 0.12
+xsep = 0.15
+# ysep = 0.10
+ysep = 0.12
+
+# plot_left = 0.1
+plot_left = 0.15
+# plot_width = 0.35
+plot_width = 0.32
+# plot_height = 0.37
+plot_height = 0.32
+
+p1_lmargin = plot_left
+p1_rmargin = p1_lmargin + plot_width
+p1_tmargin = ysep
+p1_bmargin = p1_tmargin + plot_height
+
+p2_lmargin = p1_rmargin + xsep
+p2_rmargin = p2_lmargin + plot_width
+p2_bmargin = p1_bmargin
+p2_tmargin = p1_tmargin
+
+p3_lmargin = p1_lmargin
+p3_rmargin = p1_rmargin
+p3_tmargin = p1_bmargin + ysep
+p3_bmargin = p3_tmargin + plot_height
+
+p4_lmargin = p2_lmargin
+p4_rmargin = p2_rmargin
+p4_tmargin = p2_bmargin + ysep
+p4_bmargin = p4_tmargin + plot_height
+
+set xzeroaxis
+set yzeroaxis
+
+# set format y '%.0f'
+# set xtics 0,10,50
+set ytics auto
+unset key
+
+set multiplot title 'Energies as a function of {/Symbol r}' enhanced
+
+# Energia potencial
+
+set lmargin at screen p1_lmargin
+set rmargin at screen p1_rmargin
+set bmargin at screen p1_bmargin
+set tmargin at screen p1_tmargin
+
+set xlabel '{/Symbol r} (g/cm^3)' enhanced
+# set ytics -500,2000,10000
+set ylabel 'Pot. energy (kJ/mol)'
+set autoscale
+# set yrange[-500:10000]
+plot file1 u 1:3 w p ls 5, file2 u 1:3 w p ls 5
+
+# Energia cinètica
+
+set lmargin at screen p2_lmargin
+set rmargin at screen p2_rmargin
+set bmargin at screen p2_bmargin
+set tmargin at screen p2_tmargin
+
+set autoscale
+set ylabel 'Kin. energy (kJ/mol)'
+set yrange[350:400]
+# set ytics 14000,1000,19000
+plot file1 u 1:2 w p ls 6, file2 u 1:2 w p ls 6
+
+# Energia total
+
+set lmargin at screen p3_lmargin
+set rmargin at screen p3_rmargin
+set bmargin at screen p3_bmargin
+set tmargin at screen p3_tmargin
+
+set autoscale
+unset xlabel
+# set yrange[18200:23200]
+# set ytics 18200,1000,23200
+set ylabel 'Tot. energy (kJ/mol)'
+plot file1 u 1:4 w p ls 3, file2 u 1:4 w p ls 3
+
+# Moment total
+
+set lmargin at screen p4_lmargin
+set rmargin at screen p4_rmargin
+set bmargin at screen p4_bmargin
+set tmargin at screen p4_tmargin
+
+set autoscale
+# set ytics 0,10,50
+# set yrange[0:50]
+set ylabel 'Pressure (Pa)'
+stats file2 u 6 nooutput name 'data'
+set tmargin at screen p4_tmargin
+set label gprintf('×10^{%T}',data_max) at graph 0.0, screen 0.88 offset 0,0.75
+set format y '%.1f'
+plot file1 u 1:(1e-11*$6) w p ls 5, file2 u 1:(1e-11*$6) w p ls 5
+unset multiplot
+set term qt
+reset
+pause-1
